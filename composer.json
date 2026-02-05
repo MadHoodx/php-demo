@@ -3,6 +3,8 @@
     "description": "Minimal PHP project with a known vulnerable dependency for demo purposes",
     "require": {
         "php": ">=7.4",
-        "monolog/monolog": "1.0.1"
+        "monolog/monolog": "1.23.1",
+        "symfony/http-foundation": "2.0.0"
+
     }
 }
