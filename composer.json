@@ -3,6 +3,6 @@
     "description": "Minimal PHP project with a known vulnerable dependency for demo purposes",
     "require": {
         "php": ">=7.4",
-        "monolog/monolog": "1.23.0"
+        "monolog/monolog": "1.0.1"
     }
 }
