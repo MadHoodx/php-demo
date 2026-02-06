@@ -13,9 +13,10 @@ pipeline {
       steps {
         sh '''
         docker run --rm \
-          -v "$PWD:/app" \
+          --volumes-from jenkins \
+          -w "$PWD" \
           returntocorp/semgrep:latest \
-          semgrep scan --config /app/.semgrep.yml /app
+          semgrep scan --config .semgrep.yml .
         '''
       }
     }
