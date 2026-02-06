@@ -12,11 +12,21 @@ pipeline {
     stage('Semgrep Scan') {
       steps {
         sh '''
+        echo "=============================================="
+        echo "       SCANNING FOR VULNERABILITIES...        "
+        echo "=============================================="
+        echo ""
+        echo "Files to scan:"
+        ls -la src/
+        echo ""
+        echo "Starting security scan..."
+        echo ""
+
         docker run --rm \
           --volumes-from jenkins \
           -w "$PWD" \
           returntocorp/semgrep:latest \
-          semgrep scan --config .semgrep.yml . --json --output semgrep.json || true
+          semgrep scan --config .semgrep.yml . --json-output semgrep.json --verbose || true
         '''
       }
     }
