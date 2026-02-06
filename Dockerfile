@@ -1,6 +1,5 @@
-FROM returntocorp/semgrep
+FROM returntocorp/semgrep:latest
 
 WORKDIR /app
-COPY . .
 
-CMD ["semgrep","scan","--config",".semgrep.yml","."]
+ENTRYPOINT ["semgrep"]

@@ -3,7 +3,7 @@ pipeline {
 
   stages {
 
-    stage('Checkout Code') {
+    stage('Checkout') {
       steps {
         checkout scm
       }
@@ -12,13 +12,12 @@ pipeline {
     stage('Semgrep Scan') {
       steps {
         sh '''
-          docker run --rm \
-          -v $(pwd):/app \
-          returntocorp/semgrep \
-          semgrep scan --config /app/.semgrep.yml /app
+        docker run --rm \
+          -v "$PWD:/app" \
+          returntocorp/semgrep:latest \
+          scan --config /app/.semgrep.yml /app
         '''
       }
     }
-
   }
 }
