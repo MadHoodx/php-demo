@@ -15,7 +15,7 @@ pipeline {
         docker run --rm \
           -v "$PWD:/app" \
           returntocorp/semgrep:latest \
-          scan --config /app/.semgrep.yml /app
+          semgrep scan --config /app/.semgrep.yml /app
         '''
       }
     }
