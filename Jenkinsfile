@@ -3,22 +3,22 @@ pipeline {
 
   stages {
 
-    stage('Checkout') {
+    stage('Checkout Code') {
       steps {
         checkout scm
       }
     }
 
-    stage('SAST - Semgrep Scan') {
+    stage('Semgrep Scan') {
       steps {
         sh '''
           docker run --rm \
-          -v $(pwd):/src \
+          -v $(pwd):/app \
           returntocorp/semgrep \
-          semgrep --config=auto
+          semgrep scan --config /app/.semgrep.yml /app
         '''
       }
     }
- 
+
   }
 }

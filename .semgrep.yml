@@ -1,0 +1,12 @@
+rules:
+- id: php-hardcoded-secret
+  pattern-regex: '(password|secret)\s*=\s*".+"'
+  message: "Hardcoded secret detected"
+  severity: ERROR
+  languages: [php]
+
+- id: php-sql-injection
+  pattern: mysqli_query\(
+  message: "Possible SQL Injection"
+  severity: ERROR
+  languages: [php]
