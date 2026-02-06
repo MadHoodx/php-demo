@@ -1,12 +1,42 @@
 rules:
   - id: php-hardcoded-secret
-    pattern-regex: '(password|secret)\s*=\s*".+"'
+    pattern-regex: '(password|secret|api_key)\s*=\s*".+"'
     message: "Hardcoded secret detected"
     severity: ERROR
     languages: [php]
 
   - id: php-sql-injection
     pattern: mysqli_query($CONN, $SQL)
-    message: "Possible SQL Injection"
+    message: "Possible SQL Injection - use prepared statements"
+    severity: ERROR
+    languages: [php]
+
+  - id: php-xss
+    pattern: echo $_GET[$VAR]
+    message: "XSS vulnerability - user input echoed without sanitization"
+    severity: ERROR
+    languages: [php]
+
+  - id: php-command-injection
+    pattern: system($CMD)
+    message: "Command injection - user input passed to system()"
+    severity: ERROR
+    languages: [php]
+
+  - id: php-file-inclusion
+    pattern: include($_GET[$VAR] . ...)
+    message: "Remote/Local File Inclusion vulnerability"
+    severity: ERROR
+    languages: [php]
+
+  - id: php-eval
+    pattern: eval($X)
+    message: "Dangerous eval() - allows arbitrary code execution"
+    severity: ERROR
+    languages: [php]
+
+  - id: php-unserialize
+    pattern: unserialize($_POST[$VAR])
+    message: "Insecure deserialization from user input"
     severity: ERROR
     languages: [php]
