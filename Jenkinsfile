@@ -24,20 +24,48 @@ pipeline {
     stage('Security Report') {
       steps {
         sh '''
-        echo "======================================"
-        echo "       SECURITY SCAN RESULTS          "
-        echo "======================================"
+        echo "=============================================="
+        echo "          SECURITY SCAN RESULTS               "
+        echo "=============================================="
 
         if [ -f semgrep.json ]; then
-          TOTAL=$(cat semgrep.json | grep -o '"check_id"' | wc -l)
-          echo ""
-          echo "Total vulnerabilities found: $TOTAL"
-          echo ""
-          echo "Findings by type:"
-          cat semgrep.json | grep -o '"check_id":"[^"]*"' | sort | uniq -c | sort -rn
-          echo ""
-          echo "======================================"
+          docker run --rm \
+            --volumes-from jenkins \
+            -w "$PWD" \
+            python:3-alpine python3 -c "
+import json
+
+with open('semgrep.json') as f:
+    data = json.load(f)
+
+results = data.get('results', [])
+print(f'\\nTotal vulnerabilities found: {len(results)}\\n')
+
+if results:
+    print('DETAILED FINDINGS:')
+    print('-' * 50)
+    for i, r in enumerate(results, 1):
+        path = r.get('path', 'unknown')
+        line = r.get('start', {}).get('line', '?')
+        rule = r.get('check_id', 'unknown')
+        msg = r.get('extra', {}).get('message', 'No message')
+        severity = r.get('extra', {}).get('severity', 'UNKNOWN')
+        print(f'')
+        print(f'[{i}] {severity}: {rule}')
+        print(f'    File: {path}:{line}')
+        print(f'    Message: {msg}')
+    print('')
+    print('-' * 50)
+    print('')
+    print('SUMMARY BY TYPE:')
+    from collections import Counter
+    types = Counter(r.get('check_id') for r in results)
+    for rule, count in types.most_common():
+        print(f'  {count}x {rule}')
+print('')
+"
         fi
+        echo "=============================================="
         '''
       }
     }
