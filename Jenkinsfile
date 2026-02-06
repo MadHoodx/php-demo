@@ -16,7 +16,8 @@ pipeline {
           --volumes-from jenkins \
           -w "$PWD" \
           returntocorp/semgrep:latest \
-          semgrep scan --config .semgrep.yml . --error
+          semgrep scan --config .semgrep.yml . --error --json --output semgrep.json
+
         '''
       }
     }
